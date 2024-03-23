@@ -65,10 +65,7 @@ function Sprite:update(dt)
         if self.playback.state >= (1 / self.playback.framesPerSecond) then
             self.playback.state = self.playback.state - (1 / self.playback.framesPerSecond)
 
-            -- move frame
-            -- move X
-            -- if X > columns = x is 1, add to Y
-            -- if Y > rows = y = 1
+
 
             -- increase X
             local frameX = self.playback.frameX + 1
@@ -80,9 +77,10 @@ function Sprite:update(dt)
                 frameY = frameY + 1
             end
 
-            -- if Y > rows, set Y to 1
-            if frameY > self.rows then
-                frameY = 1
+            -- check if X and Y are within animation constraints - if not, move them to start
+            if frameX > self.playback.toX and frameY > self.playback.toY then
+                frameX = self.playback.fromX
+                frameY = self.playback.fromY
             end
 
             -- save new playback state
