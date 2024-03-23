@@ -15,7 +15,8 @@ function Sprite:new(filePath, columns, rows)
             height = nil,
             tileWidth = nil,
             tileHeight = nil
-        }
+        },
+        playback = nil
     }, Sprite)
     self:load()
     return self
@@ -45,22 +46,17 @@ function Sprite:load()
     end
 end
 
-function Sprite:draw(x, y, arg1, arg2)
-    local quadX = nil
-    local quadY = nil
-
-    -- arg1 is simply a number in sequence
-    if (arg2 == nil) then
-        quadX = arg1 % self.columns
-        quadY = math.floor(arg1 % self.columns)
-    else
-        quadX = arg1
-        quadY = arg2
-    end
-
+function Sprite:draw(x, y, quadX, quadY)
     local quad = self.quads[quadY][quadX]
-
     love.graphics.draw(self.sprite, quad, x, y)
+end
+
+function Sprite:update(dt)
+
+end
+
+function Sprite:setPlayback(fromX, fromY, toX, toY)
+
 end
 
 return Sprite
