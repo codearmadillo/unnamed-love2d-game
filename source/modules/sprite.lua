@@ -46,17 +46,64 @@ function Sprite:load()
     end
 end
 
-function Sprite:draw(x, y, quadX, quadY)
+function Sprite:drawQuad(x, y, quadX, quadY)
     local quad = self.quads[quadY][quadX]
     love.graphics.draw(self.sprite, quad, x, y)
 end
 
-function Sprite:update(dt)
-
+function Sprite:draw(x, y)
+    if self.playback then
+        self:drawQuad(x, y, self.playback.frameX, self.playback.frameY)
+        return
+    end
+    love.graphics.draw(self.sprite)
 end
 
-function Sprite:setPlayback(fromX, fromY, toX, toY)
+function Sprite:update(dt)
+    if self.playback ~= nil then
+        self.playback.state = self.playback.state + dt;
+        if self.playback.state >= (1 / self.playback.framesPerSecond) then
+            self.playback.state = self.playback.state - (1 / self.playback.framesPerSecond)
 
+            -- move frame
+            -- move X
+            -- if X > columns = x is 1, add to Y
+            -- if Y > rows = y = 1
+
+            -- increase X
+            local frameX = self.playback.frameX + 1
+            local frameY = self.playback.frameY
+
+            -- if X > columns, set X to 1, and increase Y by 1
+            if frameX > self.columns then
+                frameX = 1
+                frameY = frameY + 1
+            end
+
+            -- if Y > rows, set Y to 1
+            if frameY > self.rows then
+                frameY = 1
+            end
+
+            -- save new playback state
+            self.playback.frameX = frameX
+            self.playback.frameY = frameY
+        end
+    end
+end
+
+function Sprite:clearPlayback()
+    self.playback = nil
+end
+
+function Sprite:setPlayback(fromX, fromY, toX, toY, framesPerSecond)
+    self.playback = {
+        fromX = fromX, fromY = fromY,
+        toX = toX, toY = toY,
+        frameX = fromX, frameY = fromY,
+        framesPerSecond = framesPerSecond,
+        state = 0
+    }
 end
 
 return Sprite
