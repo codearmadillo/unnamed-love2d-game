@@ -102,14 +102,17 @@ function Sprite:clearPlayback()
 end
 
 function Sprite:setPlaybackSpeed(framesPerSecond)
-    if self.playback ~= nil then
+    if self.playback == nil then
         return
     end
     self.playback.framesPerSecond = framesPerSecond
 end
 
 function Sprite:setPlaybackTimingFunction(timingFunction)
-
+    if self.playback == nil then
+        return
+    end
+    self.playback.timingFunction = timingFunction
 end
 
 function Sprite:setPlayback(fromX, fromY, toX, toY)
@@ -117,7 +120,8 @@ function Sprite:setPlayback(fromX, fromY, toX, toY)
         fromX = fromX, fromY = fromY,
         toX = toX, toY = toY,
         frameX = fromX, frameY = fromY,
-        framesPerSecond = 12,
+        framesPerSecond = 1,
+        timingFunction = nil,
         state = 0
     }
 end

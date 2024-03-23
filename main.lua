@@ -16,11 +16,11 @@ function love.load()
 
     DeathSprite = Sprite:new('assets/images/_Death.png', 10, 1)
     DeathSprite:setPlayback(1, 1, 10, 1)
-    DeathSprite:setPlaybackSpeed(6)
+    DeathSprite:setPlaybackSpeed(24)
 
     IdleSprite = Sprite:new('assets/images/_Idle.png', 10, 1)
     IdleSprite:setPlayback(1, 1, 10, 1)
-    IdleSprite:setPlaybackSpeed(24)
+    IdleSprite:setPlaybackSpeed(6)
 end
 
 function love.draw()
