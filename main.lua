@@ -13,6 +13,7 @@ function love.load()
     AttackSprite = Sprite:new('assets/images/_Attack2.png', 6, 1)
     AttackSprite:setPlayback(1, 1, 6, 1)
     AttackSprite:setPlaybackSpeed(12)
+    AttackSprite:setScaleX(-1)
 
     DeathSprite = Sprite:new('assets/images/_Death.png', 10, 1)
     DeathSprite:setPlayback(1, 1, 10, 1)

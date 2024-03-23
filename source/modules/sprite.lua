@@ -16,7 +16,11 @@ function Sprite:new(filePath, columns, rows)
             tileWidth = nil,
             tileHeight = nil
         },
-        playback = nil
+        playback = nil,
+        scale = {
+            x = 1,
+            y = 1
+        }
     }, Sprite)
     self:load()
     return self
@@ -53,8 +57,7 @@ end
 
 function Sprite:draw(x, y)
     if self.playback then
-        self:drawQuad(x, y, self.playback.frameX, self.playback.frameY)
-        return
+        return self:drawQuad(x, y, self.playback.frameX, self.playback.frameY)
     end
     love.graphics.draw(self.sprite)
 end
@@ -124,6 +127,19 @@ function Sprite:setPlayback(fromX, fromY, toX, toY)
         timingFunction = nil,
         state = 0
     }
+end
+
+function Sprite:setScale(x, y)
+    self.scale.x = x
+    self.scale.y = y
+end
+
+function Sprite:setScaleX(x)
+    self.scale.x = x
+end
+
+function Sprite:setScaleY(Y)
+    self.scale.y = y
 end
 
 return Sprite
