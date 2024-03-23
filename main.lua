@@ -11,13 +11,16 @@ function love.load()
     i18n:load()
 
     AttackSprite = Sprite:new('assets/images/_Attack2.png', 6, 1)
-    AttackSprite:setPlayback(1, 1, 6, 1, 12)
+    AttackSprite:setPlayback(1, 1, 6, 1)
+    AttackSprite:setPlaybackSpeed(12)
 
     DeathSprite = Sprite:new('assets/images/_Death.png', 10, 1)
-    DeathSprite:setPlayback(1, 1, 10, 1, 12)
+    DeathSprite:setPlayback(1, 1, 10, 1)
+    DeathSprite:setPlaybackSpeed(6)
 
     IdleSprite = Sprite:new('assets/images/_Idle.png', 10, 1)
-    IdleSprite:setPlayback(1, 1, 10, 1, 12)
+    IdleSprite:setPlayback(1, 1, 10, 1)
+    IdleSprite:setPlaybackSpeed(24)
 end
 
 function love.draw()
