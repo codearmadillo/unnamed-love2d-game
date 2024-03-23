@@ -63,45 +63,77 @@ function Sprite:draw(x, y)
 end
 
 function Sprite:update(dt)
-    if self.playback ~= nil then
-        self.playback.state = self.playback.state + dt;
-        if self.playback.state >= (1 / self.playback.framesPerSecond) then
-            self.playback.state = self.playback.state - (1 / self.playback.framesPerSecond)
+    if self.playback == nil then goto AnimationFinished end
+    if self.playback.finished then goto AnimationFinished end
 
-            -- move animation forward by one frame
-            -- if X exceeds amount of columns - move down one row and reset X to 1
-            -- if animation is outside of boundaries, move animation to fromX, and from Y
+    -- Increase animation state
+    self.playback.state = self.playback.state + dt;
 
-            -- increase X
-            local frameX = self.playback.frameX + 1
-            local frameY = self.playback.frameY
+    -- If new frame occurred, move quad pointer
+    if self.playback.state >= (1 / self.playback.framesPerSecond) then
+        -- bump state
+        self.playback.state = self.playback.state - (1 / self.playback.framesPerSecond)
 
-            -- if X > columns, set X to 1, and increase Y by 1
-            if frameX > self.columns then
-                frameX = 1
-                frameY = frameY + 1
-            else
-                -- animation is within row - check if frameX exceeded limit
-                if frameX > self.playback.toX then
-                    frameX = self.playback.fromX
-                    frameY = self.playback.fromY
-                end
-            end
+        -- increase X
+        local frameX = self.playback.frameX + 1
+        local frameY = self.playback.frameY
 
-            if frameY > self.playback.toY then
+        local isAnimationLooping = false
+
+        -- if X > columns, set X to 1, and increase Y by 1
+        if frameX > self.columns then
+            frameX = 1
+            frameY = frameY + 1
+        else
+            -- animation is within row - check if frameX exceeded limit
+            if frameX > self.playback.toX then
                 frameX = self.playback.fromX
                 frameY = self.playback.fromY
+                isAnimationLooping = true
             end
+        end
 
-            -- save new playback state
+        if frameY > self.playback.toY then
+            frameX = self.playback.fromX
+            frameY = self.playback.fromY
+            isAnimationLooping = true
+        end
+
+        if self.playback.repeats then
             self.playback.frameX = frameX
             self.playback.frameY = frameY
+        else
+            if isAnimationLooping then
+                self.playback.finished = true
+                if self.playback.finishedCallback ~= nil then
+                    self.playback.finishedCallback(self)
+                end
+            else
+                self.playback.frameX = frameX
+                self.playback.frameY = frameY
+            end
         end
     end
+
+    ::AnimationFinished::
 end
 
 function Sprite:clearPlayback()
     self.playback = nil
+end
+
+function Sprite:setPlaybackRepeat(playbackRepeats)
+    if self.playback == nil then
+        return
+    end
+    self.playback.repeats = playbackRepeats
+end
+
+function Sprite:setPlaybackFinishedCallback(cb)
+    if self.playback == nil then
+        return
+    end
+    self.playback.finishedCallback = cb
 end
 
 function Sprite:setPlaybackSpeed(framesPerSecond)
@@ -111,22 +143,21 @@ function Sprite:setPlaybackSpeed(framesPerSecond)
     self.playback.framesPerSecond = framesPerSecond
 end
 
-function Sprite:setPlaybackTimingFunction(timingFunction)
-    if self.playback == nil then
-        return
-    end
-    self.playback.timingFunction = timingFunction
-end
-
 function Sprite:setPlayback(fromX, fromY, toX, toY)
     self.playback = {
         fromX = fromX, fromY = fromY,
         toX = toX, toY = toY,
         frameX = fromX, frameY = fromY,
-        framesPerSecond = 1,
-        timingFunction = nil,
-        state = 0
+        framesPerSecond = 12,
+        state = 0,
+        repeats = true, finished = false, finishedCallback = nil
     }
+end
+
+function Sprite:resetPlayback()
+    self.playback.finished = false
+    self.playback.frameX = self.playback.fromX
+    self.playback.frameY = self.playback.fromY
 end
 
 function Sprite:setScale(x, y)
