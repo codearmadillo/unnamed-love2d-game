@@ -65,7 +65,9 @@ function Sprite:update(dt)
         if self.playback.state >= (1 / self.playback.framesPerSecond) then
             self.playback.state = self.playback.state - (1 / self.playback.framesPerSecond)
 
-
+            -- move animation forward by one frame
+            -- if X exceeds amount of columns - move down one row and reset X to 1
+            -- if animation is outside of boundaries, move animation to fromX, and from Y
 
             -- increase X
             local frameX = self.playback.frameX + 1
@@ -75,10 +77,15 @@ function Sprite:update(dt)
             if frameX > self.columns then
                 frameX = 1
                 frameY = frameY + 1
+            else
+                -- animation is within row - check if frameX exceeded limit
+                if frameX > self.playback.toX then
+                    frameX = self.playback.fromX
+                    frameY = self.playback.fromY
+                end
             end
 
-            -- check if X and Y are within animation constraints - if not, move them to start
-            if frameX > self.playback.toX and frameY > self.playback.toY then
+            if frameY > self.playback.toY then
                 frameX = self.playback.fromX
                 frameY = self.playback.fromY
             end
